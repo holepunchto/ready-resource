@@ -25,7 +25,7 @@ class Thing extends ReadyResource {
   }
 }
 
-const t = new Thing()
+const r = new Thing()
 
 await r.ready() // calls _open once
 await r.ready() // noop
