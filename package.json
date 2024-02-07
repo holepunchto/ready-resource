@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Modern single resource management",
   "main": "index.js",
+  "imports": {
+    "events": {
+      "bare": "bare-events",
+      "default": "events"
+    }
+  },
   "scripts": {
     "test": "standard && brittle test.js"
   },
