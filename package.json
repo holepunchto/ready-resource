@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/mafintosh/ready-resource/issues"
   },
-  "homepage": "https://github.com/mafintosh/ready-resource"
+  "homepage": "https://github.com/mafintosh/ready-resource",
+  "dependencies": {
+    "bare-events": "^2.2.0"
+  }
 }
