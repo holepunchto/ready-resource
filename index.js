@@ -12,13 +12,13 @@ module.exports = class ReadyResource extends EventEmitter {
   }
 
   ready () {
-    if (this.opening) return this.opening
+    if (this.opening !== null) return this.opening
     this.opening = open(this)
     return this.opening
   }
 
   close () {
-    if (this.closing) return this.closing
+    if (this.closing !== null) return this.closing
     this.closing = close(this)
     return this.closing
   }
