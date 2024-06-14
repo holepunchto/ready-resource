@@ -43,11 +43,26 @@ test('basic - close when open throws', async function (t) {
 
   t.is(r.opened, false)
   t.is(triggered, false)
-  t.is(r.closed, false)
+  t.is(r.closed, true) // autocloses
 
-  await r.close()
+  await t.execution(r.close())
 
   t.is(r.opened, false)
   t.is(triggered, false)
   t.is(r.closed, true)
+})
+
+test('ready rejecting emits close', async t => {
+  t.plan(4)
+
+  const r = new Resource()
+  r._open = () => Promise.reject(new Error('bad open'))
+
+  r.on('close', () => {
+    t.pass('emitted close')
+    t.ok(r.closed)
+    t.ok(r.closing)
+  })
+
+  await t.exception(r.ready())
 })

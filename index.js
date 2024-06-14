@@ -33,7 +33,13 @@ module.exports = class ReadyResource extends EventEmitter {
 }
 
 async function open (self) {
-  await self._open()
+  try {
+    await self._open()
+  } catch (err) {
+    self.closing = close(self) // safe to run in bg
+    throw err
+  }
+
   self.opened = true
   self.emit('ready')
 }
