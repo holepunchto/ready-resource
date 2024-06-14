@@ -36,7 +36,7 @@ async function open (self) {
   try {
     await self._open()
   } catch (err) {
-    self.closing = close(self) // safe to run in bg
+    self.close() // safe to run in bg
     throw err
   }
 
@@ -50,7 +50,7 @@ async function close (self) {
   } catch {
     // ignore errors on closing
   }
-  if (self.opened) await self._close()
+  if (self.opened === true) await self._close()
   self.closed = true
   self.emit('close')
 }
