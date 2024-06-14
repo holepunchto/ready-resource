@@ -39,8 +39,12 @@ async function open (self) {
 }
 
 async function close (self) {
-  if (self.opened === false && self.opening !== null) await self.opening
-  await self._close()
+  try {
+    if (self.opened === false && self.opening !== null) await self.opening
+  } catch {
+    // ignore errors on closing
+  }
+  if (self.opened) await self._close()
   self.closed = true
   self.emit('close')
 }
