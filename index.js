@@ -45,6 +45,7 @@ async function open (self) {
 }
 
 async function close (self) {
+  self.emit('closing')
   try {
     if (self.opened === false && self.opening !== null) await self.opening
   } catch {

@@ -66,3 +66,17 @@ test('ready rejecting emits close', async t => {
 
   await t.exception(r.ready())
 })
+
+test('closing event', async function (t) {
+  const r = new Resource()
+  await r.ready()
+
+  let closing = 0
+  r.on('closing', () => { closing++ })
+
+  const closeProms = [r.close(), r.close()]
+  t.is(closing, 1, 'closing event triggered exactly once')
+
+  await Promise.all(closeProms)
+  t.is(closing, 1, 'sanity check')
+})
