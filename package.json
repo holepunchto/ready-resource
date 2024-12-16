@@ -21,14 +21,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mafintosh/ready-resource.git"
+    "url": "git+https://github.com/holepunchto/ready-resource.git"
   },
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mafintosh/ready-resource/issues"
+    "url": "https://github.com/holepunchto/ready-resource/issues"
   },
-  "homepage": "https://github.com/mafintosh/ready-resource",
+  "homepage": "https://github.com/holepunchto/ready-resource",
   "dependencies": {
     "bare-events": "^2.2.0"
   }
