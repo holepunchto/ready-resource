@@ -33,6 +33,9 @@ module.exports = class ReadyResource extends EventEmitter {
 }
 
 async function open (self) {
+  // open after close
+  if (self.closing !== null) return
+
   try {
     await self._open()
   } catch (err) {
