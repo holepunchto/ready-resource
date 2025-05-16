@@ -19,8 +19,8 @@ module.exports = class ReadyResource extends EventEmitter {
     //   - wait for mutex
     //   - check if the desired state still matches what they want.
     //     - If so: run suspend/resume logic
-    // => suspend/resume only start running if it's the current desired state AND we're not in it
-    // => suspend/resume are guaranteed to run if a state change is needed
+    // => _suspend/_resume only start running if it's the current desired state AND we're not in it
+    // => _suspend/_resume are guaranteed to run if a state change is needed
     this.shouldBeSuspended = suspended
     this.suspended = suspended
     this._suspendMutex = mutexify()
