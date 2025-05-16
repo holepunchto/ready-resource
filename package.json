@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "brittle": "^3.1.0",
+    "resolve-reject-promise": "^1.1.0",
     "standard": "^17.0.0"
   },
   "repository": {
@@ -30,6 +31,7 @@
   },
   "homepage": "https://github.com/holepunchto/ready-resource",
   "dependencies": {
-    "bare-events": "^2.2.0"
+    "bare-events": "^2.2.0",
+    "mutexify": "^1.4.0"
   }
 }
