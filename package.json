@@ -31,6 +31,6 @@
   },
   "homepage": "https://github.com/holepunchto/ready-resource",
   "dependencies": {
-    "bare-events": "^2.2.0",
+    "bare-events": "^2.2.0"
   }
 }
