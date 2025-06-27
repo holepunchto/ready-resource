@@ -36,7 +36,6 @@ module.exports = class ReadyResource extends EventEmitter {
       if (!this.shouldBeSuspended) return // resume called in the meantime
       await this.suspendChanging
     }
-
     if (this.closing) return
     if (!this.shouldBeSuspended) return // resume called in the meantime
     if (this.suspended) return // already suspended
