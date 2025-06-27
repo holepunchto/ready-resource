@@ -41,9 +41,14 @@ module.exports = class ReadyResource extends EventEmitter {
     if (this.suspended) return // already suspended
 
     this.suspendChanging = this._suspend()
-    await this.suspendChanging
+    try {
+      await this.suspendChanging
+    } finally {
+      // if it errors, we stay in the previous state
+      this.suspendChanging = null
+    }
+
     this.suspended = true
-    this.suspendChanging = null
     this.emit('suspend')
   }
 
@@ -61,9 +66,14 @@ module.exports = class ReadyResource extends EventEmitter {
     if (!this.suspended) return // already resumed
 
     this.suspendChanging = this._resume()
-    await this.suspendChanging
+    try {
+      await this.suspendChanging
+    } finally {
+      // if it errors, we stay in the previous state
+      this.suspendChanging = null
+    }
+
     this.suspended = false
-    this.suspendChanging = null
     this.emit('resume')
   }
 
