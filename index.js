@@ -1,5 +1,4 @@
 const EventEmitter = require('events')
-const mutexify = require('mutexify/promise')
 
 module.exports = class ReadyResource extends EventEmitter {
   constructor ({ suspended = false } = {}) {
@@ -12,8 +11,8 @@ module.exports = class ReadyResource extends EventEmitter {
     this.closed = false
 
     this.shouldBeSuspended = suspended
+    this.suspendChanging = null
     this.suspended = suspended
-    this._suspendMutex = mutexify()
   }
 
   ready () {
@@ -32,35 +31,41 @@ module.exports = class ReadyResource extends EventEmitter {
     this.shouldBeSuspended = true
     if (!this.opened) await this.ready()
 
-    if (this.suspended) return // already in desired state
-    const release = await this._suspendMutex()
-    try {
-      if (this.suspended) return // already done
-      if (!this.shouldBeSuspended) return // desired state is now to resume
-      this.suspended = true
-      await this._suspend()
-      this.emit('suspend')
-    } finally {
-      release()
+    while (this.suspendChanging) {
+      if (this.closing) return
+      if (!this.shouldBeSuspended) return // resume called in the meantime
+      await this.suspendChanging
     }
+
+    if (this.closing) return
+    if (!this.shouldBeSuspended) return // resume called in the meantime
+    if (this.suspended) return // already suspended
+
+    this.suspendChanging = this._suspend()
+    await this.suspendChanging
+    this.suspended = true
+    this.suspendChanging = null
+    this.emit('suspend')
   }
 
   async resume () {
     this.shouldBeSuspended = false
     if (!this.opened) await this.ready()
 
-    if (!this.suspended) return // already in desired state
-
-    const release = await this._suspendMutex()
-    try {
-      if (!this.suspended) return // already done
-      if (this.shouldBeSuspended) return // desired state is now to suspend
-      this.suspended = false
-      await this._resume()
-      this.emit('resume')
-    } finally {
-      release()
+    while (this.suspendChanging) {
+      if (this.closing) return
+      if (this.shouldBeSuspended) return // suspend called in the meantime
+      await this.suspendChanging
     }
+    if (this.closing) return
+    if (this.shouldBeSuspended) return // suspend called in the meantime
+    if (!this.suspended) return // already resumed
+
+    this.suspendChanging = this._resume()
+    await this.suspendChanging
+    this.suspended = false
+    this.suspendChanging = null
+    this.emit('resume')
   }
 
   async _open () {
@@ -101,6 +106,10 @@ async function close (self) {
   } catch {
     // ignore errors on closing
   }
+
+  // Avoid edge cases due to closing while suspending/resuming
+  if (self.suspendChanging) await self.suspendChanging
+
   if (self.opened === true || self.opening === null) await self._close()
   self.closed = true
   self.emit('close')
