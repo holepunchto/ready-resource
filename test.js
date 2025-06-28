@@ -205,3 +205,39 @@ test('suspend and resume race conditions', async function (t) {
     t.is(nrResumes - initResumes, 1, 'only ran _resume once')
   }
 })
+
+test('suspend or resume errors -> no state change', async function (t) {
+  const r = new Resource()
+
+  let nrSuspends = 0
+  let nrResumes = 0
+  r._suspend = async function () {
+    nrSuspends++
+    return Promise.reject(new Error('I throw'))
+  }
+
+  r._resume = async function () {
+    nrResumes++
+    return Promise.reject(new Error('I throw'))
+  }
+
+  t.is(r.suspended, false, 'not suspended (sanity check)')
+
+  await t.exception(async () => await r.suspend())
+  t.is(nrSuspends, 1, 'sanity check')
+  t.is(r.suspended, false, 'still not suspended if it throws')
+  r._suspend = async function () {
+    nrSuspends++
+  }
+  await r.suspend()
+  t.is(r.suspended, true, 'suspended now it no longer errors')
+
+  await t.exception(async () => await r.resume())
+  t.is(nrResumes, 1, 'sanity check')
+  t.is(r.suspended, true, 'still suspended if it throws')
+  r._resume = async function () {
+    nrResumes++
+  }
+  await r.resume()
+  t.is(r.suspended, false, 'suspended no more now it no longer errors')
+})
