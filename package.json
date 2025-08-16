@@ -9,8 +9,10 @@
       "default": "events"
     }
   },
+  "types": "index.d.ts",
   "files": [
-    "index.js"
+    "index.js",
+    "index.d.ts"
   ],
   "scripts": {
     "test": "standard && brittle test.js"
