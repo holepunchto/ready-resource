@@ -52,7 +52,7 @@ test('basic - close when open throws', async function (t) {
   t.is(r.closed, true)
 })
 
-test('ready rejecting emits close', async t => {
+test('ready rejecting emits close', async (t) => {
   t.plan(4)
 
   const r = new Resource()

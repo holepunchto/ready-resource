@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = class ReadyResource extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
 
     this.opening = null
@@ -11,28 +11,28 @@ module.exports = class ReadyResource extends EventEmitter {
     this.closed = false
   }
 
-  ready () {
+  ready() {
     if (this.opening !== null) return this.opening
     this.opening = open(this)
     return this.opening
   }
 
-  close () {
+  close() {
     if (this.closing !== null) return this.closing
     this.closing = close(this)
     return this.closing
   }
 
-  async _open () {
+  async _open() {
     // add impl here
   }
 
-  async _close () {
+  async _close() {
     // add impl here
   }
 }
 
-async function open (self) {
+async function open(self) {
   // open after close
   if (self.closing !== null) return
 
@@ -47,7 +47,7 @@ async function open (self) {
   self.emit('ready')
 }
 
-async function close (self) {
+async function close(self) {
   try {
     if (self.opened === false && self.opening !== null) await self.opening
   } catch {
