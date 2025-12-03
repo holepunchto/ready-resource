@@ -7,7 +7,7 @@ declare module 'ready-resource' {
    * This declaration mirrors that shape.
    */
   class ReadyResource extends EventEmitter {
-    constructor()
+    constructor() // eslint-disable-line constructor-super
 
     /** Set when a call to ready() has started; resolves when _open completes */
     opening: Promise<void> | null
