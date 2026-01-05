@@ -8,19 +8,19 @@ npm install ready-resource
 
 ## Usage
 
-``` js
+```js
 const ReadyResource = require('ready-resource')
 
 class Thing extends ReadyResource {
-  constructor () {
+  constructor() {
     super()
   }
 
-  async _open () {
+  async _open() {
     // open the resource
   }
 
-  async _close () {
+  async _close() {
     // close the resource
   }
 }
