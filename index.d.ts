@@ -1,12 +1,22 @@
 declare module 'ready-resource' {
-  import { EventEmitter } from 'events'
+  import { EventEmitter, EventMap } from 'events'
+
+  /**
+   * Default events that come with ReadyResource
+   * Adds type hints for `.on`/`once`/`.emit`
+   * Passed in EventMaps will get these added
+   */
+  interface ReadyResourceEvents {
+    ready: [],
+    close: []
+  }
 
   /**
    * Runtime export is CommonJS:
    *   module.exports = class ReadyResource extends EventEmitter {}
    * This declaration mirrors that shape.
    */
-  class ReadyResource extends EventEmitter {
+  class ReadyResource<T extends EventMap<T> = ReadyResourceEvents> extends EventEmitter<T & ReadyResourceEvents> {
     constructor() // eslint-disable-line constructor-super
 
     /** Set when a call to ready() has started; resolves when _open completes */
@@ -30,22 +40,6 @@ declare module 'ready-resource' {
     /** Override these in subclasses */
     protected _open(): Promise<void>
     protected _close(): Promise<void>
-
-    // Typed events emitted by the implementation
-    on(event: 'ready', listener: () => void): this
-    on(event: 'close', listener: () => void): this
-    once(event: 'ready', listener: () => void): this
-    once(event: 'close', listener: () => void): this
-    off(event: 'ready', listener: () => void): this
-    off(event: 'close', listener: () => void): this
-    emit(event: 'ready'): boolean
-    emit(event: 'close'): boolean
-
-    // Fallback EventEmitter overloads
-    on(event: string | symbol, listener: (...args: any[]) => void): this
-    once(event: string | symbol, listener: (...args: any[]) => void): this
-    off(event: string | symbol, listener: (...args: any[]) => void): this
-    emit(event: string | symbol, ...args: any[]): boolean
   }
 
   // Match CommonJS runtime export
